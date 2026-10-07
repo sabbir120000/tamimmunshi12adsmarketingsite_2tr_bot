@@ -1,1 +1,829 @@
-iuytuip
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Top Bot Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <style>
+        :root {
+            --font-family: 'Poppins', sans-serif;
+            --primary-color: #06b6d4; /* Vibrant Cyan */
+            --secondary-color: #6366f1; /* Deep Indigo */
+            --accent-glow: rgba(6, 182, 212, 0.35);
+            --bg-color: #0f172a; /* Deep Navy Slate */
+            --card-bg: #1e293b; /* Ultra Clear Slate Card */
+            --card-border: #334155; /* Sharp Border */
+            --text-main: #ffffff; 
+            --text-sub: #cbd5e1; 
+            --success: #10b981; 
+            --danger: #ef4444; 
+            --pending: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: var(--font-family); 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.12) 0%, transparent 40%), 
+                radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.12) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        #app { max-width: 480px; margin: 0 auto; padding-bottom: 95px; position: relative; }
+        .page { display: none; padding: 16px; animation: fadeIn 0.35s ease-out; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .profile-header {
+            background: linear-gradient(180deg, #1e293b 0%, var(--bg-color) 100%);
+            padding: 32px 20px 24px;
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 12px;
+            border-radius: 0 0 28px 28px;
+        }
+        .user-avatar-container {
+            position: relative;
+            width: 86px; height: 86px;
+            margin: 0 auto 12px;
+        }
+        #user-photo { 
+            width: 100%; height: 100%; 
+            border-radius: 50%; 
+            border: 3px solid var(--primary-color); 
+            object-fit: cover;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .verified-badge {
+            position: absolute; bottom: 2px; right: 2px;
+            background: #0284c7; color: #fff;
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; border: 3px solid var(--bg-color);
+        }
+        #user-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; color: #ffffff; letter-spacing: 0.3px; }
+        .balance-pill {
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.15);
+            color: #38bdf8;
+            padding: 7px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            box-shadow: 0 2px 10px rgba(6, 182, 212, 0.15);
+        }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .stat-item { 
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 14px; padding: 14px; text-align: center;
+        }
+        .stat-item h3 { font-size: 0.78rem; color: var(--text-sub); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.8px; font-weight: 600; }
+        .stat-item p { font-size: 1.3rem; font-weight: 800; color: #ffffff; }
+
+        .wallet-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--primary-color);
+            position: relative; overflow: hidden;
+        }
+        .wallet-card::before {
+            content: ''; position: absolute; top: -50%; right: -50%;
+            width: 100%; height: 200%;
+            background: radial-gradient(circle, rgba(6,182,212,0.15), transparent 70%);
+            transform: rotate(30deg);
+        }
+
+        .btn-watch-ad {
+            width: 100%; padding: 17px; border: none; border-radius: 14px;
+            background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%);
+            color: #ffffff; font-size: 1.15rem; font-weight: 800; cursor: pointer;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.2s ease; animation: pulse-glow 2s infinite; position: relative; overflow: hidden;
+        }
+        .btn-watch-ad:active { transform: scale(0.97); }
+        .btn-watch-ad i { font-size: 1.3rem; background: #ffffff; color: #0284c7; border-radius: 50%; padding: 6px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.6); } 70% { box-shadow: 0 0 0 12px rgba(6, 182, 212, 0); } 100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); } }
+
+        .btn-primary {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff; font-weight: 700; font-size: 1rem;
+            cursor: pointer; box-shadow: 0 4px 18px rgba(99, 102, 241, 0.35);
+            transition: transform 0.2s;
+        }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:disabled { background: #334155; color: #94a3b8; box-shadow: none; cursor: not-allowed; }
+
+        .list-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 14px; padding: 14px; margin-bottom: 12px;
+        }
+        .list-item img { width: 42px; height: 42px; border-radius: 10px; margin-right: 14px; object-fit: cover; }
+        .list-info { flex: 1; }
+        .list-info h4 { font-size: 1rem; margin-bottom: 2px; font-weight: 600; color: #ffffff; }
+        .list-info p { font-size: 0.83rem; color: var(--text-sub); }
+        .list-action .btn-sm { padding: 7px 16px; border-radius: 8px; font-size: 0.8rem; background: rgba(6, 182, 212, 0.2); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.4); font-weight: 700; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--text-sub); font-size: 0.92rem; font-weight: 500; margin-left: 3px; }
+        .form-control {
+            width: 100%; padding: 14px 16px; background: #0f172a; border: 1px solid var(--card-border);
+            border-radius: 12px; color: #ffffff; font-family: inherit; font-size: 1rem; transition: all 0.3s ease;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary-color); background: #1e293b; box-shadow: 0 0 12px rgba(6, 182, 212, 0.25); }
+        select.form-control { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2306b6d4%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 15px center; background-size: 12px; padding-right: 40px; }
+
+        .lb-toggle { display: flex; background: #0f172a; padding: 5px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--card-border); }
+        .lb-btn { flex: 1; padding: 10px; border: none; background: none; color: var(--text-sub); border-radius: 9px; font-weight: 600; transition: 0.3s; font-family: inherit; }
+        .lb-btn.active { background: var(--card-bg); color: var(--primary-color); font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .rank-num { font-weight: 800; color: var(--primary-color); width: 34px; font-size: 1.15rem; }
+
+        .chart-wrap { display: flex; align-items: flex-end; justify-content: space-between; height: 125px; padding-top: 10px; border-bottom: 1px solid var(--card-border); }
+        .chart-bar { width: 10%; background: linear-gradient(180deg, var(--primary-color), var(--secondary-color)); border-radius: 6px 6px 0 0; position: relative; opacity: 0.9; }
+        .chart-labels { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.75rem; color: var(--text-sub); font-weight: 500; }
+
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .popup-box { background: #1e293b; width: 90%; max-width: 350px; padding: 25px; border-radius: 20px; border: 1px solid var(--card-border); text-align: center; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        .popup-box h2 { color: var(--primary-color); margin-bottom: 12px; }
+        .popup-content-text { text-align: left; font-size: 0.92rem; line-height: 1.5; color: #f1f5f9; margin-bottom: 20px; white-space: pre-wrap; }
+        .popup-close { position: absolute; top: 10px; right: 15px; background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; }
+
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #0f172a; border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; max-width: 480px; margin: 0 auto; left: 0; right: 0; }
+        .nav-item { background: none; border: none; color: #94a3b8; font-size: 0.78rem; display: flex; flex-direction: column; align-items: center; transition: 0.3s; font-family: inherit; font-weight: 500; }
+        .nav-item i { font-size: 1.45rem; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary-color); font-weight: 700; }
+        
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { width: 44px; height: 44px; border: 4px solid #334155; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.9s infinite linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="loader"><div class="spinner"></div><p id="loading-text" style="margin-top: 18px; color: #ffffff; font-weight: 600;">Loading App...</p></div>
+    <div id="popup" class="popup-overlay"><div class="popup-box"><button class="popup-close" onclick="closePopup()">&times;</button><div id="popup-body"></div></div></div>
+
+    <div id="app">
+        <header class="profile-header">
+            <div class="user-avatar-container">
+                <img id="user-photo" src="https://via.placeholder.com/80" alt="User">
+                <div class="verified-badge"><i class="fas fa-check"></i></div>
+            </div>
+            <h1 id="user-name">Guest User</h1>
+            <div class="balance-pill">Balance: <span id="user-balance">0.00</span> TK</div>
+        </header>
+
+        <main>
+            <!-- HOME PAGE -->
+            <div id="home-page" class="page active">
+                <div id="home-buttons-container" style="margin-bottom: 16px;"></div>
+                <div class="stats-grid">
+                    <div class="stat-item"><h3>Today's Ads</h3><p id="daily-ads">0/0</p></div>
+                    <div class="stat-item"><h3>Referrals</h3><p id="ref-count">0</p></div>
+                    <div class="stat-item"><h3>Total View</h3><p id="total-ads">0</p></div>
+                    <div class="stat-item"><h3>Earned</h3><p id="total-income">0.00</p></div>
+                </div>
+                <div class="card">
+                    <h3 style="font-size: 0.9rem; color: var(--text-sub); margin-bottom: 15px;">Last 7 Days Earnings</h3>
+                    <div id="chart-area" class="chart-wrap"></div><div id="chart-days" class="chart-labels"></div>
+                </div>
+                <div id="dynamic-links-container"></div>
+            </div>
+
+            <!-- TASKS PAGE -->
+            <div id="tasks-page" class="page">
+                <div class="card wallet-card">
+                    <h3 style="color: #cbd5e1; font-size: 0.9rem;">Main Balance</h3>
+                    <h1 style="font-size: 2.2rem; color: #fff; margin: 10px 0;"><span id="earning-wallet">0.00</span> TK</h1>
+                    <div style="background: #334155; height: 6px; border-radius: 3px; margin-top: 15px; overflow: hidden;"><div id="ad-progress-bar" style="width: 0%; height: 100%; background: var(--primary-color);"></div></div>
+                </div>
+                <h3 style="margin: 25px 0 15px; font-size: 1rem; color: #f1f5f9;">Watch & Earn</h3>
+                <div id="ad-task-area"></div>
+                <h3 style="margin: 25px 0 15px; font-size: 1rem; color: #f1f5f9;">Bonus Tasks</h3>
+                <div id="bonus-task-area"></div>
+            </div>
+
+            <!-- LEADERBOARD PAGE -->
+            <div id="leaderboard-page" class="page">
+                <div class="lb-toggle">
+                    <button class="lb-btn active" onclick="switchBoard('referral')" id="btn-ref-board">Top Referrers</button>
+                    <button class="lb-btn" onclick="switchBoard('earning')" id="btn-earn-board">Top Earners</button>
+                </div>
+                <div id="referral-list"></div>
+                <div id="earning-list" style="display: none;"></div>
+            </div>
+
+            <!-- PROFILE PAGE -->
+            <div id="profile-page" class="page">
+                <div class="card" style="text-align: center;">
+                    <i class="fas fa-gift" style="font-size: 2.2rem; color: var(--pending); margin-bottom: 10px;"></i>
+                    <h3 style="color: #ffffff;">Invite Friends</h3>
+                    <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 15px;">Earn bonus for every valid referral.</p>
+                    <input type="text" id="ref-link-input" class="form-control" style="text-align: center; margin-bottom: 10px;" readonly>
+                    <button onclick="copyRefLink()" class="btn-primary">Copy Link</button>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 20px; color: #ffffff;">Withdraw Money</h3>
+                    <form id="withdraw-form">
+                        <div class="form-group">
+                            <label>Payment Method</label>
+                            <select id="w-method" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Account Number</label>
+                            <input type="text" id="w-account" class="form-control" placeholder="Enter wallet number" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount (TK)</label>
+                            <input type="number" id="w-amount" class="form-control" placeholder="0.00" required>
+                        </div>
+                        <button type="submit" id="w-submit-btn" class="btn-primary" style="margin-top: 10px;">Request Withdraw</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 15px; color: #ffffff;">History</h3>
+                    <div id="history-list"></div>
+                </div>
+                <div id="rules-area"></div>
+            </div>
+        </main>
+
+        <nav class="nav-bar">
+            <button class="nav-item active" onclick="navTo('home-page', this)"><i class="fas fa-home"></i> Home</button>
+            <button class="nav-item" onclick="navTo('tasks-page', this)"><i class="fas fa-tasks"></i> Tasks</button>
+            <button class="nav-item" onclick="navTo('leaderboard-page', this)"><i class="fas fa-trophy"></i> Top</button>
+            <button class="nav-item" onclick="navTo('profile-page', this)"><i class="fas fa-user"></i> Profile</button>
+        </nav>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <script>
+        const tg = window.Telegram?.WebApp || {};
+        if (tg.expand) tg.expand();
+        if (tg.ready) tg.ready(); 
+        if (tg.setHeaderColor) tg.setHeaderColor('#0f172a'); 
+        if (tg.setBackgroundColor) tg.setBackgroundColor('#0f172a');
+
+        const firebaseConfig = {
+           apiKey: "AIzaSyBUDdyaR2bGujFHZlsjPb8ZeiZUqA8Wvsk",
+  authDomain: "tanjibul-hasantanjib-earning.firebaseapp.com",
+  databaseURL: "https://tanjibul-hasantanjib-earning-default-rtdb.firebaseio.com",
+  projectId: "tanjibul-hasantanjib-earning",
+  storageBucket: "tanjibul-hasantanjib-earning.firebasestorage.app",
+  messagingSenderId: "530064114305",
+  appId: "1:530064114305:web:6d2896b277352c66c74380",
+  measurementId: "G-2RWGP85X9F"
+        };
+
+        let db, appConfig = {}, userState = {}, tgUser = {};
+        let leaderboard = { ref: [], earn: [] };
+        let transactions = [];
+        let isAdSdkLoaded = false; 
+
+        const countryMap = {
+            US: { name: "United States", flag: "🇺🇸" },
+            GB: { name: "United Kingdom", flag: "🇬🇧" },
+            CA: { name: "Canada", flag: "🇨🇦" },
+            DE: { name: "Germany", flag: "🇩🇪" },
+            SE: { name: "Sweden", flag: "🇸🇪" },
+            AU: { name: "Australia", flag: "🇦🇺" },
+            MY: { name: "Malaysia", flag: "🇲🇾" },
+            ES: { name: "Spain", flag: "🇪🇸" },
+            MX: { name: "Mexico", flag: "🇲🇽" },
+            BD: { name: "Bangladesh", flag: "🇧🇩" },
+            IN: { name: "India", flag: "🇮🇳" },
+            VN: { name: "Vietnam", flag: "🇻🇳" },
+            SG: { name: "Singapore", flag: "🇸🇬" },
+            AE: { name: "United Arab Emirates", flag: "🇦🇪" },
+            SA: { name: "Saudi Arabia", flag: "🇸🇦" },
+            JP: { name: "Japan", flag: "🇯🇵" },
+            KR: { name: "South Korea", flag: "🇰🇷" },
+            FR: { name: "France", flag: "🇫🇷" },
+            IT: { name: "Italy", flag: "🇮🇹" }
+        };
+
+        function getCountryFlag(countryCode) {
+            if (!countryCode || countryCode === 'Unknown') return '🏳️';
+            if (countryMap[countryCode]) return countryMap[countryCode].flag;
+            try {
+                const codePoints = countryCode.toUpperCase().split('').map(char => 127397 + char.charCodeAt(0));
+                return String.fromCodePoint(...codePoints);
+            } catch (e) {
+                return '🏳️';
+            }
+        }
+
+        function navTo(pageId, btn) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (pageId === 'leaderboard-page') renderLeaderboard(document.getElementById('btn-ref-board').classList.contains('active') ? 'referral' : 'earning');
+            if (pageId === 'profile-page') loadHistory();
+        }
+
+        function showPopup(htmlContent) { document.getElementById('popup-body').innerHTML = htmlContent; document.getElementById('popup').style.display = 'flex'; }
+        function closePopup() { document.getElementById('popup').style.display = 'none'; }
+        function updateLoader(text) { document.getElementById('loading-text').innerText = text; }
+
+        async function init() {
+            try {
+                tgUser = tg.initDataUnsafe?.user || { id: 12345678, first_name: "Guest", last_name: "User", username: "guest" };
+                
+                firebase.initializeApp(firebaseConfig); 
+                db = firebase.database();
+
+                updateLoader("Connecting...");
+                
+                // Config Listener
+                db.ref('config').on('value', (snapshot) => {
+                    appConfig = snapshot.val() || {};
+                    if (!isAdSdkLoaded && (appConfig.adZoneId || appConfig.gigaAdScriptUrl)) {
+                        loadAdSdk();
+                    }
+                    if (userState.id) renderAll();
+                });
+
+                updateLoader("Loading User...");
+                await loadUser();
+
+                // Hide loader
+                document.getElementById('loader').style.display = 'none';
+                checkWelcomeMessage();
+
+                // Background Sync
+                loadLeaderboard();
+                loadHistory();
+
+            } catch (e) { 
+                console.error(e); 
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function loadAdSdk() {
+            if (isAdSdkLoaded) return;
+            const zoneId = (appConfig.adZoneId || '').trim();
+
+            if (appConfig.activeAdNetwork === 'adspark' && zoneId) {
+                const s = document.createElement('script'); 
+                s.src = `https://adspark-tma.top/api/public/sdk.js?k=${zoneId}`; 
+                document.body.appendChild(s);
+                isAdSdkLoaded = true;
+            } else if (appConfig.activeAdNetwork === 'giga' && appConfig.gigaAdScriptUrl) {
+                const s = document.createElement('script'); s.src = appConfig.gigaAdScriptUrl; document.body.appendChild(s);
+                isAdSdkLoaded = true;
+            } else if (appConfig.activeAdNetwork === 'monetag' && zoneId) {
+                const s = document.createElement('script');
+                s.src = 'https://libtl.com/sdk.js';
+                s.setAttribute('data-zone', zoneId);
+                s.setAttribute('data-sdk', 'show_' + zoneId);
+                document.head.appendChild(s);
+                isAdSdkLoaded = true;
+            }
+        }
+
+        async function loadUser() {
+            return new Promise((resolve) => {
+                const ref = db.ref(`users/${tgUser.id}`);
+                ref.on('value', (snapshot) => {
+                    let data = snapshot.val();
+                    if (!data) {
+                        const refId = tg.initDataUnsafe?.start_param;
+                        data = {
+                            id: tgUser.id, firstName: tgUser.first_name || 'User', lastName: tgUser.last_name || '', username: tgUser.username || '', photoUrl: tgUser.photo_url || '',
+                            balance: 0, referrals: 0, referredBy: (refId && refId != tgUser.id) ? refId : null,
+                            totalEarned: 0, lifetimeAdCount: 0, lastAdWatchDate: '1970-01-01', dailyAdCount: 0, welcomed: false
+                        };
+                        ref.set(data);
+                        if (data.referredBy) {
+                            const bonus = parseFloat(appConfig.referralBonus || 0);
+                            const referrerRef = db.ref(`users/${data.referredBy}`);
+                            if (bonus > 0) referrerRef.transaction(d => { if (d) { d.balance = (d.balance || 0) + bonus; d.referrals = (d.referrals || 0) + 1; } return d; });
+                            else referrerRef.child('referrals').set(firebase.database.ServerValue.increment(1));
+                        }
+                    }
+                    const today = new Date().toISOString().slice(0, 10);
+                    if (data.lastAdWatchDate !== today) { data.dailyAdCount = 0; data.lastAdWatchDate = today; ref.update({ dailyAdCount: 0, lastAdWatchDate: today }); }
+                    userState = data;
+                    renderAll();
+                    resolve();
+                });
+            });
+        }
+
+        async function loadLeaderboard() {
+            const snap = await db.ref('users').limitToLast(100).once('value');
+            let allUsers = [];
+            snap.forEach(c => {
+                let u = c.val();
+                u.referrals = u.referrals || 0;
+                u.totalEarned = u.totalEarned || 0;
+                allUsers.push(u);
+            });
+            leaderboard.ref = [...allUsers].sort((a, b) => b.referrals - a.referrals).slice(0, 30);
+            leaderboard.earn = [...allUsers].sort((a, b) => b.totalEarned - a.totalEarned).slice(0, 30);
+        }
+
+        async function loadHistory() {
+            if (!tgUser || !tgUser.id) return;
+            try {
+                const currentUserId = tgUser.id;
+                const statuses = ['pending', 'completed', 'rejected'];
+                transactions = [];
+
+                for (let s of statuses) {
+                    const snap = await db.ref(`withdrawals/${s}`).once('value');
+                    snap.forEach(c => {
+                        const val = c.val();
+                        if (val && (val.userId == currentUserId || val.userId === String(currentUserId))) {
+                            transactions.push({ ...val, status: s });
+                        }
+                    });
+                }
+
+                transactions.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                renderHistory();
+            } catch (err) {
+                console.error("History load error:", err);
+            }
+        }
+
+        function renderAll() {
+            if(!userState.id) return;
+
+            document.getElementById('user-photo').src = userState.photoUrl || 'https://via.placeholder.com/80';
+            document.getElementById('user-name').innerText = userState.firstName;
+            document.getElementById('user-balance').innerText = (userState.balance || 0).toFixed(2);
+            document.getElementById('daily-ads').innerText = `${userState.dailyAdCount || 0}/${appConfig.dailyAdLimit || 0}`;
+            document.getElementById('ref-count').innerText = userState.referrals || 0;
+            document.getElementById('total-ads').innerText = userState.lifetimeAdCount || 0;
+            document.getElementById('total-income').innerText = (userState.totalEarned || 0).toFixed(2);
+            renderChart(); renderHomeButtons();
+            
+            document.getElementById('earning-wallet').innerText = (userState.balance || 0).toFixed(2);
+            document.getElementById('ad-progress-bar').style.width = `${Math.min(100, ((userState.dailyAdCount || 0) / (appConfig.dailyAdLimit || 1)) * 100)}%`;
+            
+            renderTasks(); renderWithdrawOptions();
+            document.getElementById('ref-link-input').value = `https://t.me/${appConfig.botUsername || ''}/app?startapp=${tgUser.id}`;
+            renderHistory();
+            if (appConfig.appRules) document.getElementById('rules-area').innerHTML = `<div class="card"><h3>Rules</h3><p style="font-size:0.9rem; color:#cbd5e1; white-space: pre-wrap;">${appConfig.appRules}</p></div>`;
+            renderDynamicLinks();
+        }
+
+        async function renderChart() {
+            const ca = document.getElementById('chart-area'), cd = document.getElementById('chart-days'); ca.innerHTML = ''; cd.innerHTML = '';
+            const today = new Date(), days = [];
+            for(let i=6; i>=0; i--) { const d = new Date(today); d.setDate(today.getDate() - i); days.push(d.toISOString().slice(0, 10)); }
+            const vals = (await Promise.all(days.map(d => db.ref(`userEarnings/${tgUser.id}/${d}`).once('value')))).map(s => s.val() || 0);
+            const max = Math.max(...vals, 1);
+            vals.forEach((v, i) => { ca.innerHTML += `<div class="chart-bar" style="height: ${(v/max)*100}%"></div>`; cd.innerHTML += `<span>${days[i].slice(8)}</span>`; });
+        }
+
+        function renderHomeButtons() {
+            const d = document.getElementById('home-buttons-container'); d.innerHTML = '';
+            const b = appConfig.homeButtons || {};
+            if(b.button1Text) d.innerHTML += `<button onclick="tg.openLink('${b.button1Link}')" class="btn-primary" style="margin-bottom:10px">${b.button1Text}</button>`;
+            if(b.button2Text) d.innerHTML += `<button onclick="tg.openLink('${b.button2Link}')" class="btn-primary" style="background:linear-gradient(90deg, #f59e0b, #ef4444); color:#fff;">${b.button2Text}</button>`;
+        }
+
+        function renderTasks() {
+            const adDiv = document.getElementById('ad-task-area'); const now = Date.now();
+            const breakTime = userState.breakUntil && now < userState.breakUntil;
+            const limit = userState.dailyAdCount >= appConfig.dailyAdLimit;
+
+            if (breakTime) adDiv.innerHTML = `<button class="btn-watch-ad" style="background:#334155; animation:none; color:#94a3b8; box-shadow:none;" disabled><i class="fas fa-hourglass-half" style="background:#0f172a; color:#cbd5e1;"></i> Wait ${Math.ceil((userState.breakUntil - now)/60000)} Mins</button>`;
+            else if (limit) adDiv.innerHTML = `<button class="btn-watch-ad" style="background:#334155; animation:none; color:#94a3b8; box-shadow:none;" disabled><i class="fas fa-check-circle" style="background:#0f172a; color:#cbd5e1;"></i> Daily Limit Reached</button>`;
+            else adDiv.innerHTML = `<button class="btn-watch-ad" onclick="watchAd()"><i class="fas fa-play"></i> Watch Ad & Earn</button>`;
+
+            const bDiv = document.getElementById('bonus-task-area'); bDiv.innerHTML = '';
+            if (appConfig.tasks) Object.keys(appConfig.tasks).forEach(k => {
+                const t = appConfig.tasks[k], done = userState.completedTasks && userState.completedTasks[k];
+                bDiv.innerHTML += `<div class="list-item"><img src="${t.icon}"><div class="list-info"><h4>${t.name}</h4><p>+${t.reward} TK</p></div><button class="btn-sm" ${done?'disabled':''} onclick="doTask('${k}','${t.url}',${t.reward})">${done?'Done':'Claim'}</button></div>`;
+            });
+        }
+        
+        function renderDynamicLinks() {
+            const c = document.getElementById('dynamic-links-container'); c.innerHTML = '';
+            if (appConfig.links) Object.values(appConfig.links).forEach(l => c.innerHTML += `<div class="list-item" style="margin-top:10px" onclick="tg.openLink('${l.url}')"><img src="${l.icon}" style="width:30px;height:30px"><div class="list-info"><h4>${l.name}</h4></div><i class="fas fa-chevron-right" style="color:#94a3b8"></i></div>`);
+        }
+
+        function switchBoard(t) {
+            document.getElementById('btn-ref-board').classList.toggle('active', t === 'referral');
+            document.getElementById('btn-earn-board').classList.toggle('active', t === 'earning');
+            renderLeaderboard(t);
+        }
+
+        function renderLeaderboard(t) {
+            const d = document.getElementById(t === 'referral' ? 'referral-list' : 'earning-list');
+            document.getElementById('referral-list').style.display = t === 'referral' ? 'block' : 'none';
+            document.getElementById('earning-list').style.display = t === 'earning' ? 'block' : 'none';
+            d.innerHTML = '';
+            const data = leaderboard[t === 'referral' ? 'ref' : 'earn'];
+            if(data.length === 0) { d.innerHTML = '<p style="text-align:center; color:#94a3b8">No users found.</p>'; return; }
+            data.forEach((u, i) => {
+                d.innerHTML += `<div class="list-item"><span class="rank-num">#${i+1}</span><img src="${u.photoUrl || 'https://via.placeholder.com/40'}" style="border-radius:50%"><div class="list-info"><h4>${u.firstName}</h4></div><span style="font-weight:700; color:var(--primary-color)">${t==='referral'?u.referrals:(u.totalEarned||0).toFixed(2)}</span></div>`;
+            });
+        }
+
+        function renderWithdrawOptions() {
+            const s = document.getElementById('w-method'); s.innerHTML = '';
+            if (appConfig.withdrawMethods) {
+                s.innerHTML = `<option value="" disabled selected>Select a Method</option>`;
+                appConfig.withdrawMethods.forEach(m => s.innerHTML += `<option value="${m.name}">${m.name} (Min: ${m.min})</option>`);
+            }
+        }
+
+        function renderHistory() {
+            const d = document.getElementById('history-list'); d.innerHTML = '';
+            if(!transactions || transactions.length === 0) { d.innerHTML = '<p style="text-align:center; color:#94a3b8">No transactions found.</p>'; return; }
+            transactions.forEach(t => {
+                let statusText = t.status || 'pending';
+                let c = statusText === 'completed' ? 'var(--success)' : (statusText === 'pending' ? 'var(--pending)' : 'var(--danger)');
+                let dateStr = t.timestamp ? new Date(t.timestamp).toLocaleDateString() : 'Recent';
+                d.innerHTML += `<div class="list-item"><div class="list-info"><h4>${t.amount} TK - ${t.method}</h4><p>${dateStr}</p></div><span style="color:${c}; font-size:0.8rem; font-weight:bold; text-transform:uppercase">${statusText}</span></div>`;
+            });
+        }
+        
+        function checkWelcomeMessage() {
+            if (appConfig.globalWelcomeMessage && appConfig.globalWelcomeMessage.enabled) {
+                let c = `<h2>Notice</h2>`;
+                if(appConfig.globalWelcomeMessage.image) c += `<img src="${appConfig.globalWelcomeMessage.image}" style="width:100%; border-radius:10px; margin-bottom:10px">`;
+                c += `<div class="popup-content-text">${appConfig.globalWelcomeMessage.text}</div><button onclick="closePopup()" class="btn-primary">Close</button>`;
+                showPopup(c);
+            } else if (appConfig.welcomeMessage && !userState.welcomed) {
+                showPopup(`<h2>Welcome!</h2><div class="popup-content-text">${appConfig.welcomeMessage}</div><button onclick="closePopup()" class="btn-primary">Let's Earn</button>`);
+                db.ref(`users/${tgUser.id}/welcomed`).set(true);
+            }
+        }
+
+        async function getIpDetails() {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 1200);
+
+            try {
+                const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace', { signal: controller.signal });
+                clearTimeout(timeoutId);
+                const text = await response.text();
+                const lines = text.split('\n');
+                let countryCode = 'Unknown';
+                lines.forEach(line => {
+                    const parts = line.split('=');
+                    if (parts[0] === 'loc') countryCode = parts[1].trim().toUpperCase();
+                });
+                
+                const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
+                return {
+                    country_code: countryCode,
+                    country_name: (countryMap[countryCode] && countryMap[countryCode].name) || countryCode,
+                    timezone: clientTimezone
+                };
+            } catch (err) {
+                try {
+                    const controller2 = new AbortController();
+                    const timeoutId2 = setTimeout(() => controller2.abort(), 1200);
+                    const response = await fetch('https://freeipapi.com/api/json', { signal: controller2.signal });
+                    clearTimeout(timeoutId2);
+                    const data2 = await response.json();
+                    return {
+                        country_code: (data2.countryCode || 'Unknown').toUpperCase(),
+                        country_name: data2.countryName || 'Unknown',
+                        timezone: data2.timeZone || 'Unknown'
+                    };
+                } catch (e) {
+                    const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
+                    return { country_code: 'Unknown', country_name: 'Unknown', timezone: clientTimezone };
+                }
+            }
+        }
+
+        function formatTime12H(timeStr) {
+            if (!timeStr) return '';
+            let [h, m] = timeStr.split(':').map(Number);
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            return `${h}:${m < 10 ? '0' + m : m} ${ampm}`;
+        }
+
+        // 🇧🇩 বাংলাদেশ টাইম (Asia/Dhaka) অনুযায়ী কাজ করার সময় হিসাব
+        function isWithinWorkingHours(startStr, endStr) {
+            if (!startStr || !endStr) return true;
+            
+            const now = new Date();
+            const bdTimeStr = now.toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
+            const bdDate = new Date(bdTimeStr);
+            const currentMins = bdDate.getHours() * 60 + bdDate.getMinutes();
+
+            const [sH, sM] = startStr.split(':').map(Number);
+            const [eH, eM] = endStr.split(':').map(Number);
+
+            const startMins = sH * 60 + sM;
+            const endMins = eH * 60 + eM;
+
+            if (startMins <= endMins) {
+                return currentMins >= startMins && currentMins <= endMins;
+            } else {
+                return currentMins >= startMins || currentMins <= endMins;
+            }
+        }
+
+        async function watchAd() {
+            // ১. কাজের সময়সূচী (বাংলাদেশ সময়) চেক
+            if (appConfig.workStartTime && appConfig.workEndTime) {
+                if (!isWithinWorkingHours(appConfig.workStartTime, appConfig.workEndTime)) {
+                    showPopup(`
+                        <h2 style="color: var(--primary-color); margin-bottom: 12px;">⏰ কাজ বন্ধ আছে</h2>
+                        <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); padding: 15px; border-radius: 14px; margin-bottom: 20px; text-align: center; font-size: 0.9rem; line-height: 1.6;">
+                            <p style="color: #ffffff; font-weight: 500;">বিজ্ঞাপন দেখার কাজের সময় নির্ধারিত করা আছে।</p>
+                            <p style="color: #f59e0b; font-weight: 700; margin-top: 6px;">কাজের সময় (বাংলাদেশ সময়): ${formatTime12H(appConfig.workStartTime)} - ${formatTime12H(appConfig.workEndTime)}</p>
+                        </div>
+                        <button onclick="closePopup()" class="btn-primary">ঠিক আছে</button>
+                    `);
+                    return;
+                }
+            }
+
+            showPopup(`<h3>Checking Verification...</h3><p style="font-size:0.8rem; color:#cbd5e1; margin-top:5px;">Verifying Timezone & Proxy Security</p><div class="spinner" style="margin:20px auto"></div>`);
+            
+            try {
+                const ipData = await getIpDetails();
+                const currentCountry = (ipData.country_code || '').toUpperCase();
+                const allowedCountry = (appConfig.allowedCountry || '').trim().toUpperCase();
+                const allowedTimezone = (appConfig.allowedTimezone || '').trim().toLowerCase();
+                const targetFlag = getCountryFlag(allowedCountry);
+                const targetCountryInfo = countryMap[allowedCountry]?.name || allowedCountry;
+
+                // Device / Browser Timezone
+                const userDeviceTz = (Intl.DateTimeFormat().resolvedOptions().timeZone || ipData.timezone || '').toLowerCase();
+
+                // 🔴 ধাপ ১: টাইমজোন চেক (Timezone Verification)
+                if (allowedTimezone && userDeviceTz !== allowedTimezone) {
+                    const tzNotice = `
+                        <h2 style="color: #f59e0b; margin-bottom: 12px; font-size: 1.2rem;">🌐 টাইমজোন পরিবর্তন করুন</h2>
+                        
+                        <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); padding: 15px; border-radius: 14px; margin-bottom: 20px; text-align: left; font-size: 0.88rem; line-height: 1.6;">
+                            <p style="color: #ffffff; font-weight: 600; margin-bottom: 8px;">বিজ্ঞাপন দেখতে হলে আপনার ডিভাইসের টাইমজোন ঠিক করতে হবে!</p>
+                            <p style="color: #cbd5e1;">১. আপনার ফোনের Settings এ যান।</p>
+                            <p style="color: #cbd5e1;">২. Date & Time এ গিয়ে Timezone সিলেক্ট করুন <b>${allowedCountry} (${appConfig.allowedTimezone})</b></p>
+                            <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
+                            <p style="color: #ef4444; font-size: 0.82rem;">❌ বর্তমান ডিভাইস টাইমজোন: <b>${userDeviceTz}</b></p>
+                            <p style="color: #10b981; font-size: 0.82rem;">✅ প্রয়োজনীয় টাইমজোন: <b>${appConfig.allowedTimezone}</b></p>
+                        </div>
+
+                        <button onclick="closePopup()" class="btn-primary">ঠিক আছে, চেঞ্জ করছি</button>
+                    `;
+                    showPopup(tzNotice);
+                    return;
+                }
+
+                // 🔴 ধাপ ২: প্রক্সি / IP লোকেশন চেক (Proxy Verification)
+                if (allowedCountry && currentCountry !== allowedCountry) {
+                    const proxyNotice = `
+                        <h2 style="color: var(--primary-color); margin-bottom: 12px; font-size: 1.2rem;">🛡️ প্রক্সি / VPN কানেক্ট করুন</h2>
+                        
+                        <div style="background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.3); padding: 15px; border-radius: 14px; margin-bottom: 20px; text-align: left; font-size: 0.88rem; line-height: 1.6;">
+                            <p style="color: #ffffff; font-weight: 600; margin-bottom: 8px;">আপনার টাইমজোন ঠিক আছে! এবার IP কানেক্ট করুন:</p>
+                            <p style="color: #cbd5e1;">আপনার VPN বা Proxy তে <b>${targetFlag} ${targetCountryInfo} (${allowedCountry})</b> লোকেশন সিলেক্ট করে Connect করুন।</p>
+                            <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
+                            <p style="color: #ef4444; font-size: 0.82rem;">❌ বর্তমান IP দেশ: <b>${getCountryFlag(currentCountry)} ${ipData.country_name} (${currentCountry})</b></p>
+                            <p style="color: #10b981; font-size: 0.82rem;">✅ প্রয়োজনীয় দেশ: <b>${targetFlag} ${targetCountryInfo} (${allowedCountry})</b></p>
+                        </div>
+
+                        <button onclick="closePopup()" class="btn-primary" style="background: var(--primary-color); color:#fff;">ঠিক আছে</button>
+                    `;
+                    showPopup(proxyNotice);
+                    return;
+                }
+
+                // 🔴 ধাপ ৩: টাইমজোন এবং IP দুটিই ঠিক থাকলে এড লোড হবে
+                showPopup(`<h3>Loading Ad...</h3><div class="spinner" style="margin:20px auto"></div>`);
+                
+                let p;
+                const zoneId = (appConfig.adZoneId || '').trim();
+
+                if (appConfig.activeAdNetwork === 'adspark') { 
+                    if (typeof window.showAdspark !== 'function') throw new Error("Ad not ready yet. Please wait 2-3 seconds."); 
+                    p = window.showAdspark({ ymid: tgUser.id ? String(tgUser.id) : undefined }); 
+                }
+                else if (appConfig.activeAdNetwork === 'giga') { 
+                    if (typeof window.showGiga !== 'function') throw new Error("Ad not ready yet. Please wait 2-3 seconds."); 
+                    p = window.showGiga(); 
+                }
+                else if (appConfig.activeAdNetwork === 'monetag') {
+                    const monetagFn = 'show_' + zoneId;
+                    if (typeof window[monetagFn] !== 'function') throw new Error("Monetag Ad not ready yet. Please wait 2-3 seconds.");
+                    p = window[monetagFn]();
+                }
+                else throw new Error("Ad Config Error");
+                
+                await p; 
+                closePopup();
+                
+                const v = appConfig.adValue || 0; 
+                
+                const u = { 
+                    dailyAdCount: (userState.dailyAdCount || 0) + 1, 
+                    lifetimeAdCount: (userState.lifetimeAdCount || 0) + 1, 
+                    totalEarned: (userState.totalEarned || 0) + v,
+                    balance: firebase.database.ServerValue.increment(v)
+                };
+                if ((u.dailyAdCount % appConfig.adsPerBreak) === 0 && appConfig.adsPerBreak > 0) u.breakUntil = Date.now() + (appConfig.breakDuration * 60000);
+                
+                await db.ref(`users/${tgUser.id}`).update(u);
+                await db.ref(`userEarnings/${tgUser.id}/${new Date().toISOString().slice(0, 10)}`).set(firebase.database.ServerValue.increment(v));
+                
+                renderAll();
+            } catch (e) { 
+                closePopup(); 
+                if (tg.showAlert) tg.showAlert("Ad Error: " + (e.message || "Failed to load ad"));
+                else alert("Ad Error: " + (e.message || "Failed to load ad"));
+            }
+        }
+
+        function doTask(id, url, reward) {
+            if (tg.openLink) tg.openLink(url); else window.open(url, '_blank');
+            showPopup(`<h3>Checking...</h3><p>Wait 5s...</p>`);
+            setTimeout(async () => {
+                closePopup();
+                try {
+                    await db.ref(`users/${tgUser.id}/completedTasks/${id}`).set(true);
+                    await db.ref(`users/${tgUser.id}/balance`).set(firebase.database.ServerValue.increment(reward));
+                    renderAll();
+                } catch(e) { if (tg.showAlert) tg.showAlert("Error"); }
+            }, 5000);
+        }
+
+        function copyRefLink() { const i = document.getElementById('ref-link-input'); i.select(); document.execCommand('copy'); if (tg.showAlert) tg.showAlert("Copied!"); else alert("Copied!"); }
+
+        document.getElementById('withdraw-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const method = document.getElementById('w-method').value;
+            const acc = document.getElementById('w-account').value;
+            const amt = parseFloat(document.getElementById('w-amount').value);
+            
+            const conf = appConfig.withdrawMethods?.find(m => m.name === method);
+            if (!conf) return;
+            if (amt < conf.min) { if (tg.showAlert) tg.showAlert(`Min: ${conf.min}`); else alert(`Min: ${conf.min}`); return; }
+            if (amt > userState.balance) { if (tg.showAlert) tg.showAlert("Low Balance"); else alert("Low Balance"); return; }
+
+            const btn = document.getElementById('w-submit-btn'); 
+            btn.disabled = true; 
+            btn.innerText = "Sending...";
+            
+            try {
+                await db.ref(`users/${tgUser.id}/balance`).set(firebase.database.ServerValue.increment(-amt));
+                
+                const req = { 
+                    userId: tgUser.id, 
+                    userName: userState.firstName, 
+                    method: method, 
+                    account: acc, 
+                    amount: amt, 
+                    status: 'pending', 
+                    timestamp: firebase.database.ServerValue.TIMESTAMP 
+                };
+                
+                await db.ref('withdrawals/pending').push(req);
+                await loadHistory();
+                
+                if (tg.showAlert) tg.showAlert("Request Sent!"); else alert("Request Sent!");
+                document.getElementById('withdraw-form').reset();
+                renderAll();
+            } catch(e) { 
+                console.error(e);
+                if (tg.showAlert) tg.showAlert("Error sending request"); else alert("Error sending request");
+            } finally { 
+                btn.disabled = false; 
+                btn.innerText = "Request Withdraw"; 
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
